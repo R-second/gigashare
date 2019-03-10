@@ -1,8 +1,6 @@
 <<<<<<< HEAD
 # gigashare
 Geospatial Hackers Program
-=======
-# Gigashare
 
 To start your Phoenix server:
 
