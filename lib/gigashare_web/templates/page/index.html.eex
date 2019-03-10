@@ -1,0 +1,89 @@
+
+
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+
+<% 
+[ result ] = Json.get("https://aed.azure-mobile.net", "/api/NearAED?lat=35.96&lng=136.185")
+  latitude = Map.get(result,"Latitude")
+  longitude = Map.get(result,"Longitude")
+  locationName = Map.get(result,"LocationName")
+%>
+
+<h3>ギガを借りたい人！<br>
+近くの情報を見たい場合は下をクリック！</h3>
+
+<p><button onclick="geoFindMe()">現在地を表示！</button></p>
+
+<%
+data = Db.query("SELECT * FROM locations")
+results = Db.to_map(data)
+[ head | tail ] = results
+latitude = Map.get(head, "latitude")
+longitude = Map.get(head,"longitude")
+%>
+
+<div id="map"></div>
+<script>
+var map = L.map('map').setView([<%= latitude %>,<%= longitude %>], 5); 
+
+
+L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg', { 
+  attribution: '&copy; <a href="https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg">国土地理院</a>contributors'
+
+}).addTo(map);
+
+
+var icon2 = L.icon({
+    iconUrl: 'images/imgo.png',
+
+    iconSize:     [40, 52], // アイコンのサイズ
+    iconAnchor:   [16, 52], // マーカーの位置に対応するアイコンの位置
+    popupAnchor:  [0, -55] // ポップアップを開く基準
+    });
+
+<%= for result <- results do %>
+L.marker([<%= Map.get(result, "latitude") %>,<%= Map.get(result,"longitude") %>], {icon: icon2}) 
+    .bindPopup('<p><button onclick="jump(<%= Map.get(result,"id") %>)" > matching </button></p>' + '</p>')
+    .addTo(map);
+
+<% end %>
+
+function geoFindMe(){
+var output = document.getElementById("out");
+  if (!navigator.geolocation){
+    output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+    return;
+  }
+  function success(position) {
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    var to =  turf.point([latitude, longitude]);
+    var from = turf.point([<%= latitude %>,<%= longitude %>]);
+    //現在位置のGeoJSONデータ
+    var options = {units: 'kilometers'}; 
+    var distance = turf.distance(from, to, options);
+    
+    var icon1 = L.icon({
+    iconUrl: 'images/IMG_0090.PNG',
+
+    iconSize:     [50, 52], // アイコンのサイズ
+    iconAnchor:   [16, 52], // マーカーの位置に対応するアイコンの位置
+    popupAnchor:  [0, -55] // ポップアップを開く基準
+    });
+    L.marker([latitude,longitude], {icon: icon1}).addTo(map).bindPopup('あなたの現在位置');  
+
+  }
+  function error() {
+    output.innerHTML = "Unable to retrieve your location";
+  }
+  navigator.geolocation.getCurrentPosition(success, error);
+}
+
+function jump(num){
+       console.log(num);
+       if (confirm("matching")==true)
+      　//OKならTOPページにジャンプさせる
+      　location.href = "http://localhost:4000/locations/" + num;
+} 
+</script>
+

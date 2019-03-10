@@ -1,0 +1,43 @@
+<h1>入力情報</h1>
+
+<ul>
+  <li>
+    <strong>Latitude:</strong>
+    <%= @location.latitude %>
+  </li>
+
+  <li>
+    <strong>Longitude:</strong>
+    <%= @location.longitude %>
+  </li>
+
+  <li>
+    <strong>Locationname:</strong>
+    <%= @location.locationName %>
+  </li>
+
+  <li>
+    <strong>Giga:</strong>
+    <%= @location.giga %>
+  </li>
+
+  <li>
+    <strong>Time:</strong>
+    <%= @location.time %>
+  </li>
+
+  <li>
+    <strong>Price:</strong>
+    <%= @location.price %>
+  </li>
+
+  <li>
+    <strong>email:</strong>
+    <%= @location.email %>
+  </li>
+
+  <p>この情報でよければ、emailでコンタクトをとってください。<p>
+
+</ul>
+
+<span><%= link "編集", to: Routes.location_path(@conn, :edit, @location) %></span>

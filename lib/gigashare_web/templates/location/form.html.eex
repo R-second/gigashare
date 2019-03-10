@@ -1,0 +1,39 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= label f, :latitude %><p>緯度</p>
+  <%= number_input f, :latitude, step: "any" %>
+  <%= error_tag f, :latitude %>
+
+  <%= label f, :longitude %><p>経度</p>
+  <%= number_input f, :longitude, step: "any" %>
+  <%= error_tag f, :longitude %>
+
+  <%= label f, :locationName %><p>場所の名前</p>
+  <%= text_input f, :locationName %>
+  <%= error_tag f, :locationName %>
+
+  <%= label f, :giga %><p>単位：ギガ(小数可)</p>
+  <%= number_input f, :giga, step: "any" %>
+  <%= error_tag f, :giga %>
+
+  <%= label f, :time %><p>単位：分</p>
+  <%= number_input f, :time %>
+  <%= error_tag f, :time %>
+
+  <%= label f, :price %><p>単位：円/ギガ</p>
+  <%= number_input f, :price %>
+  <%= error_tag f, :price %>
+
+  <%= label f, :email %>
+  <%= text_input f, :email %>
+  <%= error_tag f, :email %>
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+<% end %>
